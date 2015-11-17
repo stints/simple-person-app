@@ -24,7 +24,7 @@ def person():
         try:
             data = request.get_json()
             sql = "insert into person (first_name, last_name, birthday, zipcode)" \
-                    "values ({0}, {1}, {2}, {3})".format(data['first_name'].strip(),
+                    "values ('{0}', '{1}', '{2}', '{3}')".format(data['first_name'].strip(),
                                                     data['last_name'].strip(),
                                                     data['birthday'].strip(),
                                                     data['zipcode'].strip())
