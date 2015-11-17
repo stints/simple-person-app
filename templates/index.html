@@ -2,7 +2,7 @@
 <html>
  <head>
   <title>Service Fusion Person Application</title>
-  <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="static/js/vendor/modernizr.js"></script>
   <link href="static/css/foundation.min.css" rel="stylesheet">
  </head>
  <body>
@@ -31,6 +31,9 @@
    <tbody>
    </tbody>
   </table>
+  <script src="static/js/vendor/jquery.js"></script>
+  <script src="static/js/vendor/fastclick.js"></script>
+  <script src="static/js/foundation.min.js"></script>
 
   <script>
    var f = document.getElementById("add_person"),
@@ -45,7 +48,7 @@
      birthday: f.elements['birthday'].value,
      zipcode: f.elements['zipcode'].value
     }
-    
+
     $.ajax({
      dataType: "json",
      contentType: "application/json",
