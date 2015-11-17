@@ -6,32 +6,87 @@
   <link href="static/css/foundation.min.css" rel="stylesheet">
  </head>
  <body>
-  <div id="add_person_modal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-   <form id="add_person">
-    <label for="first_name">First Name</label>
-    <input type="text" name="first_name" />
-    <label for="last_name">Last Name</label>
-    <input type="text" name="last_name" />
-    <label for="birthday">Birthday</label>
-    <input type="date" name="birthday" class="ui-datepicker" />
-    <label for="zipcode">Zipcode</label />
-    <input type="number" name="zipcode" />
-    <button type="submit">Add</button>
-   </form>
+  <div class="contain-to-grid sticky">
+   <nav class="top-bar" data-topbar role="navigation" data-options="sticky_on: large"> 
+    <ul class="title-area">
+     <li class="name">
+      <h1><a href="#">Person App</a></h1>
+     </li>
+     <li class="toggle-topbar menu-icon">
+      <a href><span>Menu</span></a>
+     </li>
+    </ul>
+    
+    <section class="top-bar-section">
+     <ul class="right">
+      <li class="divider"></li>
+      <li><a href="#" data-reveal-id="add_person_modal">+ Person</a></li>
+     </ul>
+    </section>
+   </nav>
   </div>
-
-  <table>
-   <thead>
-    <tr>
-     <th>Name</th>
-     <th>Birthday</th>
-     <th>Zipcode</th>
-    </tr>
-   </thead>
-   <tbody>
-   </tbody>
-  </table>
-  <a href="#" data-reveal-id="add_person_modal">Add a new person</a>
+  <br />
+  <div id="add_person_modal" class="reveal-modal tiny" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+   <br />
+   <form id="add_person">
+    <div class="row">
+     <div class="large-5 columns">
+      <label>First Name
+       <input type="text" name="first_name" />
+      </label>
+     </div>
+     <div class="large-6 columns">
+      <label>Last Name
+       <input type="text" name="last_name" />
+      </label>
+     </div>
+    </div>
+    <div class="row">
+     <div class="small-12 columns">
+      <div class="row">
+       <div class="small-3 columns">
+        <label for="birthday" class="right inline">Birthday</label>
+       </div>
+       <div class="small-9 columns">
+        <input type="date" name="birthday" class="ui-datepicker" />
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="row">
+     <div class="small-12 columns">
+      <div class="row">
+       <div class="small-3 columns">
+        <label for="zipcode" class="right inline">Zipcode</label>
+       </div>
+       <div class="small-9 columns">
+        <input type="number" name="zipcode" />
+       </div>
+      </div>
+     </div>
+    </div> 
+    <div class="right">
+     <button type="submit">Add</button>
+     <button type="reset">Clear</button>
+    </div>
+   </form>
+   <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+  </div>
+  <div class="row">
+   <div class="small-3 small-centered columns">
+    <table role="grid">
+     <thead>
+      <tr>
+       <th width="200">Name</th>
+       <th width="100">Birthday</th>
+       <th width="70">Zipcode</th>
+      </tr>
+     </thead>
+     <tbody>
+     </tbody>
+    </table>
+   </div>
+  </div>
   <script src="static/js/vendor/jquery.js"></script>
   <script src="static/js/vendor/fastclick.js"></script>
   <script src="static/js/foundation.min.js"></script>
@@ -60,6 +115,7 @@
      data: JSON.stringify(data)
     })
     .done(function(resp) {
+     $('#add_person_modal').foundation('reveal','close');
      person_data.push(data);
      update_table([data]);
     });
