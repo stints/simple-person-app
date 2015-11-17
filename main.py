@@ -23,7 +23,9 @@ def person():
     if request.method == 'POST':
         try:
             data = request.get_json()
-            cursor.execute("""insert into person values (%s,%s,%s,%s)""",
+            cursor.execute("""insert into person \
+                            (first_name, last_name, birthday, zipcode) \
+                            values (%s,%s,%s,%s)""",
                             (data['first_name'].strip(),
                             data['last_name'].strip(),
                             data['birthday'].strip(),
