@@ -6,7 +6,7 @@
   <link href="static/css/foundation.min.css" rel="stylesheet">
  </head>
  <body>
-  <div class="form-div">
+  <div id="add_person_modal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
    <form id="add_person">
     <label for="first_name">First Name</label>
     <input type="text" name="first_name" />
@@ -31,6 +31,7 @@
    <tbody>
    </tbody>
   </table>
+  <a href="#" data-reveal-id="add_person_modal">Add a new person</a>
   <script src="static/js/vendor/jquery.js"></script>
   <script src="static/js/vendor/fastclick.js"></script>
   <script src="static/js/foundation.min.js"></script>
