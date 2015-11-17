@@ -24,10 +24,11 @@ def person():
         try:
             data = request.get_json()
             cursor.execute("""insert into person values (%s,%s,%s,%s)""",
-                            data['first_name'].strip(),
+                            (data['first_name'].strip(),
                             data['last_name'].strip(),
                             data['birthday'].strip(),
                             data['zipcode'].strip())
+                          )
             try:
                 conn.commit()
                 result = "inserted"
