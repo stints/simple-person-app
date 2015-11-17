@@ -24,14 +24,14 @@ def person():
         try:
             data = request.get_json()
             sql = "insert into person (first_name, last_name, birthday, zipcode)" \
-                    "values (%s, %s, %s, %s)".format(data['first_name'].strip(),
+                    "values ({0}, {1}, {2}, {3})".format(data['first_name'].strip(),
                                                     data['last_name'].strip(),
                                                     data['birthday'].strip(),
                                                     data['zipcode'].strip())
             cursor.execute(sql)
             return json.dumps({"result":"inserted"})
-        except:
-            return json.dumps({"result":"error"})
+        except Exception as e:
+            return json.dumps({"result":"error","error":str(e)})
 
     else:
         cursor.execute('select first_name, last_name, birthday, zipcode from person')
