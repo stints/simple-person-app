@@ -23,14 +23,22 @@ def person():
     if request.method == 'POST':
         try:
             data = request.get_json()
-            sql = "insert into person (first_name, last_name, birthday, zipcode)" \
-                    "values ('{0}', '{1}', '{2}', '{3}')".format(data['first_name'].strip(),
-                                                    data['last_name'].strip(),
-                                                    data['birthday'].strip(),
-                                                    data['zipcode'].strip())
-            cursor.execute(sql)
-            return json.dumps({"result":"inserted"})
+            cursor.execute("""insert into person values (%s,%s,%s,%s)""",
+                            data['first_name'].strip(),
+                            data['last_name'].strip(),
+                            data['birthday'].strip(),
+                            data['zipcode'].strip())
+            try:
+                conn.commit()
+                result = "inserted"
+            except:
+                conn.rollback()
+                result = "error"
+
+            conn.close()
+            return json.dumps({"result":result})
         except Exception as e:
+            conn.close()
             return json.dumps({"result":"error","error":str(e)})
 
     else:
@@ -41,6 +49,7 @@ def person():
         for d in data:
             d = dict(zip(columns, d))
             result.append(d)
+        conn.close()
         return json.dumps(result, default=date_handler)
 
 def date_handler(obj):
