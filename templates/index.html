@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Service Fusion Person Application</title>
+  <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <link href="static/css/foundation.min.css" rel="stylesheet">
+ </head>
+ <body>
+  <div class="form-div">
+   <form id="add_person">
+    <label for="first_name">First Name</label>
+    <input type="text" name="first_name" />
+    <label for="last_name">Last Name</label>
+    <input type="text" name="last_name" />
+    <label for="birthday">Birthday</label>
+    <input type="text" name="birthday" />
+    <label for="zipcode">Zipcode</label />
+    <input type="text" name="zipcode" />
+    <input type="submit" value="submit" />
+   </form>
+  </div>
+
+  <table>
+   <thead>
+    <tr>
+     <th>Name</th>
+     <th>Birthday</th>
+     <th>Zipcode</th>
+    </tr>
+   </thead>
+   <tbody>
+   </tbody>
+  </table>
+
+  <script>
+   var f = document.getElementById("add_person"),
+       url = "/api/person",
+       person_data = [];
+
+   f.addEventListener("submit", function(e) {
+    e.preventDefault();
+    var data = {
+     first_name: f.elements['first_name'].value,
+     last_name: f.elements['last_name'].value,
+     birthday: f.elements['birthday'].value,
+     zipcode: f.elements['zipcode'].value
+    }
+    
+    $.ajax({
+     dataType: "json",
+     contentType: "application/json",
+     url: url,
+     method: "POST",
+     data: JSON.stringify(data)
+    })
+    .done(function(resp) {
+     person_data.push(data);
+     update_table([data]);
+    });
+   });
+
+   function load_person_data() {
+    $.ajax({
+     url: url
+    })
+    .done(function(resp) {
+     person_data = JSON.parse(resp);
+     $("table > tbody").html("");
+     update_table();
+    });
+   }
+
+   function update_table(rowData) {
+    rowData = rowData || person_data;
+    console.log(rowData);
+    rowData.forEach(function(element, index, array) {
+     var row = "<tr><td>" + element.first_name + " " + element.last_name + "</td><td>" + element.birthday + "</td><td>" + element.zipcode + "</td></tr>";
+     $('table > tbody:last-child').append(row);
+    });
+   }
+
+   window.onload = load_person_data()
+  </script>
+ </body>
+</html>
