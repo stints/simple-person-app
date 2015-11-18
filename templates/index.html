@@ -66,7 +66,8 @@
      </div>
     </div> 
     <div class="right">
-     <button type="submit">Add</button>
+     <input type="hidden" name="id" value="" />
+     <button type="submit" id="form_button">Add|Update</button>
      <button type="reset">Clear</button>
     </div>
    </form>
@@ -80,6 +81,7 @@
        <th width="200">Name</th>
        <th width="100">Birthday</th>
        <th width="70">Zipcode</th>
+       <th width="30"></th>
       </tr>
      </thead>
      <tbody>
@@ -107,17 +109,36 @@
      zipcode: f.elements['zipcode'].value
     }
 
+    var method = "POST",
+        id = "";
+    if(f.elements['id'].value != "") {
+     id = f.elements['id'].value;
+     data['id'] = id
+     method = "PUT";
+    }
+
     $.ajax({
      dataType: "json",
      contentType: "application/json",
-     url: url,
-     method: "POST",
+     url: id == "" ? url : url + "/" + id,
+     method: method,
      data: JSON.stringify(data)
     })
     .done(function(resp) {
      $('#add_person_modal').foundation('reveal','close');
-     person_data.push(data);
-     update_table([data]);
+     if(method == "POST") {
+      data["id"] = resp.id;
+      person_data.push(data);
+      update_table([data]);
+     } else {
+      person_data.forEach(function(element, index, array) {
+       if(element.id == id) {
+        array[index] = data
+       }
+      });
+      $("table > tbody").html("");
+      update_table();
+     }
     });
    });
 
@@ -134,14 +155,47 @@
 
    function update_table(rowData) {
     rowData = rowData || person_data;
-    console.log(rowData);
     rowData.forEach(function(element, index, array) {
-     var row = "<tr><td>" + element.first_name + " " + element.last_name + "</td><td>" + element.birthday + "</td><td>" + element.zipcode + "</td></tr>";
+     var row = "<tr data-id='" + element.id + "'><td>" + element.first_name + " " + element.last_name + "</td><td>" + element.birthday + "</td><td>" + element.zipcode + "</td><td><a href='#'>&#215;</a></td></tr>";
      $('table > tbody:last-child').append(row);
     });
    }
 
-   window.onload = load_person_data()
+   $(document).on('click', 'table > tbody > tr > td > a', function() {
+     tr = $(this).parent().parent();
+     id = tr.data('id')
+     $.ajax({
+      url: url + '/' + id,
+      method: 'DELETE',
+     })
+     .done(function(resp) {
+      person_data.forEach(function(element, index, array) {
+       if(element.id == id) {
+        array.splice(index, 1);
+       }
+      })
+      tr.remove()
+     })
+   });
+
+   $(document).on('click', 'table > tbody > tr', function(e) {
+    tr = $(this);
+    if($(e.target).closest('td:last-child').length) {
+     return;
+    }
+    id = tr.data('id');
+    data = person_data.filter(function(obj) {
+     return obj.id == id;
+    })[0];
+    
+    $.each(data, function(name, val) {
+     var form_element = $('[name="' + name + '"]');
+     form_element.val(val);
+    });
+    $('#add_person_modal').foundation('reveal','open');
+   });
+
+   window.onload = load_person_data();
   </script>
  </body>
 </html>
